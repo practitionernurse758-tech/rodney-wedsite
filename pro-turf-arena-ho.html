@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rodney's Turf Arena – Book Your Pitch in Ho</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00C853;
+    --green-dark: #00963d;
+    --green-glow: #00ff6a22;
+    --black: #080f08;
+    --card-bg: #0e1a0e;
+    --surface: #121f12;
+    --surface2: #182018;
+    --orange: #FF6D00;
+    --white: #f0fff0;
+    --muted: #7aaa7a;
+    --border: #1e301e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--green-dark); border-radius: 3px; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 6vw;
+    background: rgba(8,15,8,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.7rem;
+    letter-spacing: 2px;
+    color: var(--green);
+    text-decoration: none;
+  }
+  .logo span { color: var(--white); }
+
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-weight: 600;
+    font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--green); }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 28px; border-radius: 4px; font-weight: 700;
+    font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase;
+    cursor: pointer; text-decoration: none; border: none; transition: all 0.2s;
+  }
+  .btn-green {
+    background: var(--green); color: var(--black);
+  }
+  .btn-green:hover { background: #00ff6a; transform: translateY(-2px); box-shadow: 0 8px 30px #00C85355; }
+  .btn-outline {
+    background: transparent; color: var(--white);
+    border: 2px solid rgba(240,255,240,0.25);
+  }
+  .btn-outline:hover { border-color: var(--green); color: var(--green); }
+  .btn-orange { background: var(--orange); color: #fff; }
+  .btn-orange:hover { background: #ff8c00; transform: translateY(-2px); box-shadow: 0 8px 30px #FF6D0055; }
+
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+  .hamburger span { width: 24px; height: 2px; background: var(--white); transition: all 0.3s; border-radius: 2px; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    background:
+      linear-gradient(to bottom, rgba(8,15,8,0.6) 0%, rgba(8,15,8,0.3) 50%, rgba(8,15,8,0.95) 100%),
+      radial-gradient(ellipse at 60% 40%, #005a1a44 0%, transparent 60%),
+      url('https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=1600&q=80') center/cover no-repeat;
+    display: flex; align-items: center;
+    padding: 120px 6vw 80px;
+    position: relative; overflow: hidden;
+  }
+
+  .hero-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green-glow); border: 1px solid #00C85340;
+    padding: 6px 16px; border-radius: 100px; font-size: 0.78rem;
+    color: var(--green); font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-badge::before { content: '⚽'; font-size: 1rem; }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.5rem, 6vw, 6rem);
+    line-height: 0.95; letter-spacing: 2px; color: var(--white);
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  .hero-title .accent { color: var(--green); }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+    color: var(--muted); font-size: 1.1rem; line-height: 1.7; max-width: 480px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .hero-stats {
+    display: flex; gap: 2rem; margin-top: 3rem;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+  .stat { display: flex; flex-direction: column; }
+  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: var(--green); line-height: 1; }
+  .stat-label { font-size: 0.78rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+  .hero-card {
+    background: rgba(14,26,14,0.8); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2rem;
+    backdrop-filter: blur(20px);
+    animation: fadeUp 0.6s 0.2s ease both;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  }
+  .hero-card h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 1.2rem;
+  }
+  .quick-slots { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1.5rem; }
+  .slot {
+    padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface); font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; text-align: center;
+  }
+  .slot:hover, .slot.active { border-color: var(--green); color: var(--green); background: var(--green-glow); }
+  .slot.taken { opacity: 0.3; cursor: not-allowed; text-decoration: line-through; }
+
+  /* ── SECTION BASE ── */
+  section { padding: 100px 6vw; }
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.78rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--green); margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 4vw, 4rem); letter-spacing: 2px;
+    line-height: 1; margin-bottom: 1rem;
+  }
+  .section-sub { color: var(--muted); font-size: 1rem; line-height: 1.7; max-width: 500px; }
+  .section-header { margin-bottom: 4rem; }
+
+  .max-w { max-width: 1200px; margin: 0 auto; }
+
+  /* ── BOOKING ── */
+  #booking { background: var(--surface); }
+
+  .booking-grid {
+    display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; align-items: start;
+  }
+
+  .calendar-wrap {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 2rem;
+  }
+  .cal-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;
+  }
+  .cal-header h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.3rem; letter-spacing: 2px; text-transform: uppercase; }
+  .cal-nav button {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--white);
+    width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 1rem;
+    transition: all 0.2s;
+  }
+  .cal-nav button:hover { background: var(--green); border-color: var(--green); color: var(--black); }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-day-label { text-align: center; font-size: 0.72rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; padding: 6px 0; }
+  .cal-day {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    border-radius: 8px; font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; transition: all 0.15s; border: 1px solid transparent;
+  }
+  .cal-day:hover { background: var(--surface2); border-color: var(--border); }
+  .cal-day.today { border-color: var(--green); color: var(--green); }
+  .cal-day.selected { background: var(--green); color: var(--black); }
+  .cal-day.other { color: #3a4a3a; cursor: default; }
+  .cal-day.other:hover { background: none; border-color: transparent; }
+
+  .time-slots-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 1.5rem; }
+
+  .booking-form-wrap {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 2rem;
+  }
+  .form-title {
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 2px; margin-bottom: 1.5rem;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1rem; }
+  .form-group label { font-size: 0.78rem; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; }
+  .form-group input, .form-group select {
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--white); padding: 12px 16px; border-radius: 8px;
+    font-family: 'Barlow', sans-serif; font-size: 0.95rem;
+    transition: border-color 0.2s; outline: none;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--green); }
+  .form-group select option { background: var(--surface2); }
+
+  .selected-summary {
+    background: var(--green-glow); border: 1px solid #00C85340;
+    border-radius: 10px; padding: 14px 18px; margin-bottom: 1.5rem;
+    font-size: 0.88rem; color: var(--green); font-weight: 600;
+  }
+
+  /* ── PRICING ── */
+  #pricing { background: var(--black); }
+
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+
+  .price-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2rem; position: relative; overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .price-card:hover { transform: translateY(-6px); border-color: var(--green-dark); }
+  .price-card.featured { border-color: var(--green); }
+  .price-card.featured::before {
+    content: 'MOST POPULAR';
+    position: absolute; top: 1rem; right: -2rem;
+    background: var(--green); color: var(--black);
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 2px;
+    padding: 4px 40px; transform: rotate(45deg);
+  }
+  .price-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .price-time { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+  .price-amount { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; letter-spacing: 2px; color: var(--white); line-height: 1; }
+  .price-amount span { font-size: 1.5rem; color: var(--green); }
+  .price-range { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+  .price-features { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .price-features li { font-size: 0.9rem; color: var(--muted); display: flex; align-items: center; gap: 10px; }
+  .price-features li::before { content: '✓'; color: var(--green); font-weight: 700; }
+
+  /* ── GALLERY ── */
+  #gallery { background: var(--surface); }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto;
+    gap: 1rem;
+  }
+  .gallery-item {
+    border-radius: 12px; overflow: hidden; position: relative;
+    cursor: pointer;
+  }
+  .gallery-item:first-child { grid-column: span 2; grid-row: span 2; }
+  .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s; min-height: 200px; }
+  .gallery-item:hover img { transform: scale(1.05); }
+  .gallery-overlay {
+    position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,200,83,0.7) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.3s; display: flex; align-items: flex-end; padding: 1.5rem;
+  }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+  .gallery-overlay span { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem; }
+
+  /* ── TESTIMONIALS ── */
+  #testimonials { background: var(--black); }
+
+  .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .testi-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2rem; position: relative;
+  }
+  .testi-card::before { content: '"'; font-family: 'Bebas Neue', sans-serif; font-size: 5rem; color: var(--green); line-height: 0.8; position: absolute; top: 1.2rem; right: 1.5rem; opacity: 0.3; }
+  .testi-stars { color: #FFB300; margin-bottom: 1rem; font-size: 0.9rem; letter-spacing: 3px; }
+  .testi-text { color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; font-size: 0.95rem; }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .testi-avatar {
+    width: 42px; height: 42px; border-radius: 50%; background: var(--green-dark);
+    display: flex; align-items: center; justify-content: center; font-weight: 700;
+    font-size: 1.1rem; color: var(--black);
+  }
+  .testi-name { font-weight: 700; font-size: 0.9rem; }
+  .testi-role { font-size: 0.78rem; color: var(--muted); }
+
+  /* ── LOCATION ── */
+  #location { background: var(--surface); }
+
+  .location-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .map-placeholder {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 16px; height: 380px; overflow: hidden; position: relative;
+  }
+  .map-placeholder iframe { width: 100%; height: 100%; border: none; }
+  .location-details { display: flex; flex-direction: column; gap: 1.5rem; }
+  .detail-item { display: flex; gap: 1.2rem; align-items: flex-start; }
+  .detail-icon {
+    width: 44px; height: 44px; border-radius: 10px; background: var(--green-glow);
+    border: 1px solid #00C85340; display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; flex-shrink: 0;
+  }
+  .detail-label { font-size: 0.75rem; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .detail-value { font-weight: 600; font-size: 1rem; }
+
+  /* ── CONTACT ── */
+  #contact { background: var(--black); }
+
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .contact-cards { display: flex; flex-direction: column; gap: 1rem; }
+  .contact-card {
+    display: flex; align-items: center; gap: 1.5rem;
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.5rem;
+    transition: border-color 0.2s;
+  }
+  .contact-card:hover { border-color: var(--green); }
+  .contact-card .icon { font-size: 1.8rem; }
+  .contact-card h4 { font-weight: 700; margin-bottom: 4px; }
+  .contact-card p { color: var(--muted); font-size: 0.9rem; }
+  .whatsapp-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #25D366; color: #fff; padding: 14px 28px;
+    border-radius: 8px; font-weight: 700; font-size: 0.88rem;
+    letter-spacing: 1px; text-transform: uppercase; text-decoration: none;
+    transition: all 0.2s; margin-top: 0.5rem;
+  }
+  .whatsapp-btn:hover { background: #1fba59; transform: translateY(-2px); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 60px 6vw 30px;
+  }
+  .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+  .footer-about p { color: var(--muted); font-size: 0.9rem; line-height: 1.8; margin-top: 1rem; }
+  .footer-col h4 { font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 1.2rem; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+  .footer-col a { color: #6a8c6a; font-size: 0.9rem; text-decoration: none; transition: color 0.2s; }
+  .footer-col a:hover { color: var(--green); }
+  .social-row { display: flex; gap: 0.8rem; }
+  .social-btn {
+    width: 38px; height: 38px; border-radius: 8px;
+    background: var(--card-bg); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; cursor: pointer; transition: all 0.2s; text-decoration: none;
+  }
+  .social-btn:hover { background: var(--green-glow); border-color: var(--green); }
+  .footer-bottom {
+    padding-top: 2rem; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--muted); font-size: 0.82rem;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in { animation: fadeUp 0.6s ease both; }
+
+  /* ── MOBILE NAV ── */
+  .mobile-menu {
+    display: none; position: fixed; top: 70px; left: 0; right: 0;
+    background: rgba(8,15,8,0.97); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border); padding: 2rem 6vw;
+    z-index: 99; flex-direction: column; gap: 1.5rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { color: var(--white); text-decoration: none; font-size: 1.1rem; font-weight: 600; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero-grid, .booking-grid, .location-grid, .contact-grid, .footer-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .testi-grid { grid-template-columns: 1fr; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+    .gallery-item:first-child { grid-column: span 2; grid-row: span 1; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .hero-card { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    section { padding: 70px 5vw; }
+    .gallery-grid { grid-template-columns: 1fr; }
+    .gallery-item:first-child { grid-column: span 1; }
+    .form-row { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .quick-slots { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Sticky Book Button (mobile) */
+  .sticky-cta {
+    display: none; position: fixed; bottom: 1.5rem; left: 50%;
+    transform: translateX(-50%); z-index: 50;
+    box-shadow: 0 8px 40px #00C85355;
+  }
+  @media (max-width: 700px) { .sticky-cta { display: flex; } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Rodney's Turf <span>Arena</span></a>
+  <ul class="nav-links">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#booking">Book Now</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#booking" class="btn btn-green" style="padding:10px 22px;font-size:0.8rem;">⚽ Book Now</a>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#hero" onclick="toggleMenu()">Home</a>
+  <a href="#booking" onclick="toggleMenu()">Book Now</a>
+  <a href="#pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="#gallery" onclick="toggleMenu()">Gallery</a>
+  <a href="#contact" onclick="toggleMenu()">Contact</a>
+  <a href="#booking" class="btn btn-green" style="width:fit-content;" onclick="toggleMenu()">⚽ Book Now</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid max-w">
+    <div>
+      <div class="hero-badge">Now Open – Ho, Volta Region</div>
+      <h1 class="hero-title">
+        Book Your<br>
+        <span class="accent">AstroTurf</span><br>
+        Pitch Online
+      </h1>
+      <p class="hero-sub">Ho's premier AstroTurf facility. Professionally maintained, floodlit for night games — book your slot in seconds.</p>
+      <div class="hero-actions">
+        <a href="#booking" class="btn btn-green">⚽ Book Now</a>
+        <a href="#contact" class="btn btn-outline">📞 Contact Us</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num">5K+</span>
+          <span class="stat-label">Matches Played</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">98%</span>
+          <span class="stat-label">Happy Customers</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">7AM</span>
+          <span class="stat-label">Opens Daily</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-card">
+      <h3>Quick Book – Today</h3>
+      <div class="quick-slots" id="quickSlots">
+        <div class="slot" onclick="selectQuickSlot(this)">6:00–7:00 AM</div>
+        <div class="slot" onclick="selectQuickSlot(this)">7:00–8:00 AM</div>
+        <div class="slot taken">8:00–9:00 AM</div>
+        <div class="slot" onclick="selectQuickSlot(this)">9:00–10:00 AM</div>
+        <div class="slot taken">3:00–4:00 PM</div>
+        <div class="slot" onclick="selectQuickSlot(this)">5:00–6:00 PM</div>
+        <div class="slot" onclick="selectQuickSlot(this)">7:00–8:00 PM</div>
+        <div class="slot" onclick="selectQuickSlot(this)">9:00–10:00 PM</div>
+      </div>
+      <a href="#booking" class="btn btn-green" style="width:100%;justify-content:center;margin-top:0.5rem;">Confirm Slot →</a>
+      <p style="text-align:center;color:var(--muted);font-size:0.75rem;margin-top:0.8rem;">⚡ Slots fill fast on weekends</p>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking">
+  <div class="max-w">
+    <div class="section-header">
+      <div class="section-label">Online Booking</div>
+      <h2 class="section-title">Reserve Your Slot</h2>
+      <p class="section-sub">Pick a date, choose your time, fill in your details — done in under 2 minutes.</p>
+    </div>
+    <div class="booking-grid">
+      <!-- Calendar -->
+      <div>
+        <div class="calendar-wrap">
+          <div class="cal-header">
+            <h3 id="calMonthYear">April 2026</h3>
+            <div class="cal-nav">
+              <button onclick="changeMonth(-1)">‹</button>
+              &nbsp;
+              <button onclick="changeMonth(1)">›</button>
+            </div>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+        </div>
+        <div style="margin-top:1.5rem;">
+          <p style="font-size:0.78rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.8rem;">Available Time Slots</p>
+          <div class="time-slots-grid" id="timeSlots">
+            <div class="slot" onclick="selectSlot(this)">6:00–7:00 AM</div>
+            <div class="slot" onclick="selectSlot(this)">7:00–8:00 AM</div>
+            <div class="slot taken">8:00–9:00 AM</div>
+            <div class="slot" onclick="selectSlot(this)">10:00–11:00 AM</div>
+            <div class="slot" onclick="selectSlot(this)">12:00–1:00 PM</div>
+            <div class="slot" onclick="selectSlot(this)">3:00–4:00 PM</div>
+            <div class="slot" onclick="selectSlot(this)">5:00–6:00 PM</div>
+            <div class="slot" onclick="selectSlot(this)">6:00–7:00 PM</div>
+            <div class="slot taken">7:00–8:00 PM</div>
+            <div class="slot" onclick="selectSlot(this)">9:00–10:00 PM</div>
+          </div>
+          <p style="font-size:0.78rem;color:var(--muted);margin-top:0.8rem;">
+            <span style="color:#ff5555;">■</span> Taken &nbsp;&nbsp;
+            <span style="color:var(--green);">■</span> Available &nbsp;&nbsp;
+            <span style="color:#7aaa7a;">■</span> Selected
+          </p>
+        </div>
+      </div>
+      <!-- Form -->
+      <div class="booking-form-wrap">
+        <div class="form-title">Your Details</div>
+        <div class="selected-summary" id="selectedSummary">
+          📅 Select a date and time slot to continue
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" placeholder="e.g. Kwame Mensah">
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" placeholder="+233 XX XXX XXXX">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="kwame@email.com">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Duration</label>
+            <select>
+              <option>1 Hour</option>
+              <option>2 Hours</option>
+              <option>3 Hours</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Team Size</label>
+            <select>
+              <option>5-a-side</option>
+              <option>7-a-side</option>
+              <option>11-a-side</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Special Requests (optional)</label>
+          <input type="text" placeholder="e.g. Need bibs, balls, or referee">
+        </div>
+        <button class="btn btn-green" style="width:100%;justify-content:center;padding:16px;font-size:0.95rem;" onclick="submitBooking()">
+          ✅ Confirm Booking
+        </button>
+        <p style="text-align:center;color:var(--muted);font-size:0.78rem;margin-top:1rem;">
+          📱 You'll receive a WhatsApp confirmation
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="max-w">
+    <div class="section-header">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Simple, Fair Rates</h2>
+      <p class="section-sub">No hidden fees. Weekend discounts available for bulk bookings.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-icon">🌅</div>
+        <div class="price-time">Morning</div>
+        <div class="price-amount"><span>GHS </span>100</div>
+        <div class="price-range">6:00 AM – 12:00 PM</div>
+        <ul class="price-features">
+          <li>Per 1-hour session</li>
+          <li>Full pitch access</li>
+          <li>Changing rooms</li>
+          <li>Free parking</li>
+        </ul>
+      </div>
+      <div class="price-card featured">
+        <div class="price-icon">☀️</div>
+        <div class="price-time">Afternoon</div>
+        <div class="price-amount"><span>GHS </span>120</div>
+        <div class="price-range">12:00 PM – 6:00 PM</div>
+        <ul class="price-features">
+          <li>Per 1-hour session</li>
+          <li>Full pitch access</li>
+          <li>Changing rooms</li>
+          <li>Balls & bibs available</li>
+        </ul>
+      </div>
+      <div class="price-card">
+        <div class="price-icon">🌙</div>
+        <div class="price-time">Night</div>
+        <div class="price-amount"><span>GHS </span>150</div>
+        <div class="price-range">6:00 PM – 11:00 PM</div>
+        <ul class="price-features">
+          <li>Per 1-hour session</li>
+          <li>Full floodlit pitch</li>
+          <li>Changing rooms</li>
+          <li>Security on-site</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:2.5rem;padding:1.5rem 2rem;background:var(--surface);border:1px solid var(--border);border-radius:14px;display:flex;gap:3rem;flex-wrap:wrap;align-items:center;">
+      <div>
+        <p style="font-size:0.75rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">Bulk Discount</p>
+        <p style="font-weight:700;">Book 5+ hours → <span style="color:var(--green);">10% OFF</span></p>
+      </div>
+      <div>
+        <p style="font-size:0.75rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">Weekend Special</p>
+        <p style="font-weight:700;">Weekend mornings → <span style="color:var(--green);">GHS 90</span></p>
+      </div>
+      <div>
+        <p style="font-size:0.75rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">Monthly Pass</p>
+        <p style="font-weight:700;">Unlimited bookings → <span style="color:var(--green);">GHS 1,200</span></p>
+      </div>
+      <a href="#booking" class="btn btn-green" style="margin-left:auto;">Book Now →</a>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="max-w">
+    <div class="section-header">
+      <div class="section-label">Gallery</div>
+      <h2 class="section-title">See the Pitch</h2>
+      <p class="section-sub">Professional-grade turf, floodlit for night games, and always game-ready.</p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1570498839593-e565b39455fc?w=900&q=80" alt="Pitch overview">
+        <div class="gallery-overlay"><span>Full Pitch View</span></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1509077678009-fd02a2b0d1b0?w=600&q=80" alt="Night game">
+        <div class="gallery-overlay"><span>Night Floodlights</span></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=600&q=80" alt="Match in play">
+        <div class="gallery-overlay"><span>Match in Play</span></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1529630667117-9c3de5cf2c0d?w=600&q=80" alt="Turf close-up">
+        <div class="gallery-overlay"><span>Premium Turf</span></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=600&q=80" alt="Players on pitch">
+        <div class="gallery-overlay"><span>5-a-side Action</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="max-w">
+    <div class="section-header">
+      <div class="section-label">Reviews</div>
+      <h2 class="section-title">What Players Say</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">Honestly the best AstroTurf in Ho. The surface is always clean and the night lighting is excellent. Our team books here every week.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">K</div>
+          <div>
+            <div class="testi-name">Kwame Asante</div>
+            <div class="testi-role">Weekend League Captain</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">The online booking system is so easy to use — picked my slot, got a WhatsApp confirmation, and showed up ready to play. No stress at all.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">A</div>
+          <div>
+            <div class="testi-name">Abena Owusu</div>
+            <div class="testi-role">Corporate Team Organizer</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">Great facilities, helpful staff, and the pricing is very fair for the quality you get. Changing rooms are clean. Highly recommend!</p>
+        <div class="testi-author">
+          <div class="testi-avatar">E</div>
+          <div>
+            <div class="testi-name">Emmanuel Tetteh</div>
+            <div class="testi-role">Regular Player</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOCATION -->
+<section id="location">
+  <div class="max-w">
+    <div class="location-grid">
+      <div class="map-placeholder">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31812.45!2d0.4721!3d6.6011!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfd17e3b3d3b3d3b3%3A0x0!2sHo%2C%20Volta%20Region%2C%20Ghana!5e0!3m2!1sen!2sgh!4v1680000000000!5m2!1sen!2sgh"
+          allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+      <div>
+        <div class="section-label">Find Us</div>
+        <h2 class="section-title">Our Location</h2>
+        <p class="section-sub" style="margin-bottom:2rem;">Easily accessible from the main road with ample parking available on-site.</p>
+        <div class="location-details">
+          <div class="detail-item">
+            <div class="detail-icon">📍</div>
+            <div>
+              <div class="detail-label">Address</div>
+              <div class="detail-value">Rodney's Turf Arena, Ho<br>Volta Region, Ghana</div>
+            </div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-icon">🕐</div>
+            <div>
+              <div class="detail-label">Opening Hours</div>
+              <div class="detail-value">Mon–Sun: 6:00 AM – 11:00 PM</div>
+            </div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-icon">🚗</div>
+            <div>
+              <div class="detail-label">Parking</div>
+              <div class="detail-value">Free parking for up to 30 vehicles</div>
+            </div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-icon">🚌</div>
+            <div>
+              <div class="detail-label">Public Transport</div>
+              <div class="detail-value">5 min walk from Ho Central bus station</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="max-w">
+    <div class="contact-grid">
+      <div>
+        <div class="section-label">Get in Touch</div>
+        <h2 class="section-title">We're Here<br>to Help</h2>
+        <p class="section-sub" style="margin-bottom:2rem;">Have questions about booking, pricing, or hosting an event? Reach out any time.</p>
+        <a href="https://wa.me/233200926361" class="whatsapp-btn" target="_blank">
+          💬 Chat on WhatsApp
+        </a>
+      </div>
+      <div class="contact-cards">
+        <div class="contact-card">
+          <div class="icon">📞</div>
+          <div>
+            <h4>Phone</h4>
+            <p>0548944987</p>
+            <p style="font-size:0.8rem;margin-top:4px;">Available 7AM – 10PM daily</p>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="icon">💬</div>
+          <div>
+            <h4>WhatsApp</h4>
+            <p>0200926361</p>
+            <p style="font-size:0.8rem;margin-top:4px;">Fastest way to reach us</p>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="icon">📧</div>
+          <div>
+            <h4>Email</h4>
+            <p>osei75341@gmail.com</p>
+            <p style="font-size:0.8rem;margin-top:4px;">We reply within a few hours</p>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="icon">📱</div>
+          <div>
+            <h4>Social Media</h4>
+            <p>@RodneysTurfArenaHo</p>
+            <p style="font-size:0.8rem;margin-top:4px;">Instagram · Twitter/X</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="max-w">
+    <div class="footer-grid">
+      <div class="footer-about">
+        <a href="#" class="logo">Rodney's Turf <span>Arena</span></a>
+        <p>Ho's premier AstroTurf facility. Professional-grade pitch, easy online booking, and a community built around the beautiful game.</p>
+        <div class="social-row" style="margin-top:1.5rem;">
+          <a href="#" class="social-btn">📸</a>
+          <a href="#" class="social-btn">🐦</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#booking">Book a Slot</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#">5-a-side Games</a></li>
+          <li><a href="#">7-a-side Games</a></li>
+          <li><a href="#">11-a-side Pitch</a></li>
+          <li><a href="#">Corporate Events</a></li>
+          <li><a href="#">Tournaments</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Info</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Terms & Conditions</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Refund Policy</a></li>
+          <li><a href="#">FAQs</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Rodney's Turf Arena. All rights reserved.</span>
+      <span>Made with ⚽ in Ho, Volta Region</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Sticky CTA -->
+<a href="#booking" class="btn btn-green sticky-cta">⚽ Book Now</a>
+
+<script>
+  // ── Mobile Menu ──
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+
+  // ── Slot Selection ──
+  function selectSlot(el) {
+    if (el.classList.contains('taken')) return;
+    document.querySelectorAll('#timeSlots .slot').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+    const dateEl = document.querySelector('.cal-day.selected');
+    const dateStr = dateEl ? dateEl.dataset.date : 'your selected date';
+    document.getElementById('selectedSummary').textContent =
+      `📅 ${dateStr} — ⏰ ${el.textContent}`;
+  }
+
+  function selectQuickSlot(el) {
+    if (el.classList.contains('taken')) return;
+    document.querySelectorAll('#quickSlots .slot').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // ── Calendar ──
+  let calYear = 2026, calMonth = 3; // April = 3
+
+  function renderCalendar() {
+    const grid = document.getElementById('calGrid');
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    document.getElementById('calMonthYear').textContent = `${monthNames[calMonth]} ${calYear}`;
+    grid.innerHTML = '';
+    const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    days.forEach(d => {
+      const el = document.createElement('div');
+      el.className = 'cal-day-label'; el.textContent = d;
+      grid.appendChild(el);
+    });
+    const firstDay = new Date(calYear, calMonth, 1).getDay();
+    const totalDays = new Date(calYear, calMonth + 1, 0).getDate();
+    const today = new Date();
+    for (let i = 0; i < firstDay; i++) {
+      const el = document.createElement('div'); el.className = 'cal-day other';
+      const prevDays = new Date(calYear, calMonth, 0).getDate();
+      el.textContent = prevDays - firstDay + i + 1; grid.appendChild(el);
+    }
+    for (let d = 1; d <= totalDays; d++) {
+      const el = document.createElement('div'); el.className = 'cal-day';
+      el.textContent = d;
+      const monthNames2 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      el.dataset.date = `${d} ${monthNames2[calMonth]} ${calYear}`;
+      if (d === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear()) el.classList.add('today');
+      el.onclick = () => {
+        document.querySelectorAll('.cal-day').forEach(x => x.classList.remove('selected'));
+        el.classList.add('selected');
+        const active = document.querySelector('#timeSlots .slot.active');
+        document.getElementById('selectedSummary').textContent = active
+          ? `📅 ${el.dataset.date} — ⏰ ${active.textContent}`
+          : `📅 ${el.dataset.date} — pick a time slot below`;
+      };
+      grid.appendChild(el);
+    }
+  }
+
+  function changeMonth(dir) {
+    calMonth += dir;
+    if (calMonth > 11) { calMonth = 0; calYear++; }
+    if (calMonth < 0)  { calMonth = 11; calYear--; }
+    renderCalendar();
+  }
+
+  renderCalendar();
+
+  // ── Booking Submit ──
+  function submitBooking() {
+    const summary = document.getElementById('selectedSummary').textContent;
+    if (summary.includes('Select a date')) {
+      alert('Please select a date and time slot first!');
+      return;
+    }
+    alert(`🎉 Booking Confirmed!\n\n${summary}\n\nYou'll receive a WhatsApp confirmation shortly. See you on the pitch!`);
+  }
+
+  // ── Smooth active nav ──
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 120) current = s.getAttribute('id');
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--green)' : '';
+    });
+  });
+</script>
+</body>
+</html>
